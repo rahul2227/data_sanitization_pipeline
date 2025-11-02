@@ -101,3 +101,14 @@ To know more about other parameters you can look through [Sanitization main](./s
 
 
 > **Disclaimer:** GitHub Copilot is used only for validating pull requests and not for authoring any code. This can be easily verified by seeing commit history.
+
+## Streamlit App (Preview)
+
+An interactive Streamlit UI is provided to run the pipeline step-by-step without the CLI.
+
+- Launch with your conda env (`test_env`):
+  - `conda run -n test_env streamlit run streamlit_app.py`
+- Upload a CSV with a `text` or `segments` column, or use the demo data.
+- Proceed through tabs: Preprocess → Contamination (lite) → Membership → Sanitize.
+
+Note: First run may download models (SentenceTransformers) depending on features used.

@@ -3,6 +3,17 @@ import random
 
 from datasets import load_dataset
 
+# Lazy, module-level cache for Gutenberg sentences to avoid repeated loads
+_GUTENBERG_SENTENCES = None
+
+
+def _get_gutenberg_sentences():
+    global _GUTENBERG_SENTENCES
+    if _GUTENBERG_SENTENCES is None:
+        ds = load_dataset("sedthh/gutenberg_english", split="train")
+        _GUTENBERG_SENTENCES = ds["TEXT"]
+    return _GUTENBERG_SENTENCES
+
 
 def swap_words(text):
     words = text.split()
@@ -25,20 +36,19 @@ def add_char_noise(text, noise_level=0.05):
             words[w] = random.choice(ops)(words[w])
     return ' '.join(words)
 
-def insert_irrelevant_text(text, gutenberg_sentences):
+def insert_irrelevant_text(text, gutenberg_sentences=None):
+    if gutenberg_sentences is None:
+        gutenberg_sentences = _get_gutenberg_sentences()
     irrelevant = random.choice(gutenberg_sentences)
     words = text.split()
     insert_pos = random.randint(0, len(words))
     return ' '.join(words[:insert_pos] + irrelevant.split() + words[insert_pos:])
 
 def contaminate_text(text):
-
-    # load the dataset
-    # Load irrelevant text dataset
-    gutenberg_ds = load_dataset("sedthh/gutenberg_english", split="train")
-    gutenberg_sentences = gutenberg_ds['TEXT']
-
+    """Contaminate a single text sample using simple perturbations and a random
+    Gutenberg sentence insertion. The Gutenberg dataset is loaded once and cached.
+    """
     text = swap_words(text)
     text = add_char_noise(text)
-    text = insert_irrelevant_text(text, gutenberg_sentences)
+    text = insert_irrelevant_text(text)
     return text

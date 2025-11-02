@@ -21,9 +21,9 @@ def main():
                         help="Use the default raw data for preprocessing.")
     parser.add_argument("--sanitization-action", choices=["remove", "anonymize", "rewrite"],
                         default="remove", help="Sanitization action to perform.")
-    parser.add_argument("--sanitized-output", type=str, default="../data/sanitized_dataset.csv",
+    parser.add_argument("--sanitized-output", type=str, default="data/sanitized_dataset.csv",
                         help="Path to save the sanitized dataset.")
-    parser.add_argument("--sanitization-log", type=str, default="../data/sanitization_log.csv",
+    parser.add_argument("--sanitization-log", type=str, default="data/sanitization_log.csv",
                         help="Path to save detailed sanitization logs.")
     args = parser.parse_args()
 
@@ -35,9 +35,9 @@ def main():
     logging.info("Starting Data Sanitization step.")
 
     # Load necessary data
-    # preprocessed_path = "../data/preprocessed_wikitext103_subset.csv"
-    # contamination_path = "../data/contamination_flags.csv"
-    # membership_path = "../data/membership_inference_flags.csv"
+    # preprocessed_path = "data/preprocessed_wikitext103_subset.csv"
+    # contamination_path = "data/contamination_flags.csv"
+    # membership_path = "data/membership_inference_flags.csv"
     # for testing purposes
     preprocessed_path = "data/preprocessed_wikitext103_subset_3414.csv"
     contamination_path = "data/contamination_flags_3414.csv"

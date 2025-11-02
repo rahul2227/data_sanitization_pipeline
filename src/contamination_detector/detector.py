@@ -34,6 +34,12 @@ def detect_contamination(args):
         logging.error("Input data must have a 'segments' column.")
         return None
 
+    # Ensure stable identifier for segments
+    import hashlib
+    df['segments'] = df['segments'].astype(str)
+    if 'segment_id' not in df.columns:
+        df['segment_id'] = df['segments'].map(lambda x: hashlib.sha256(x.encode('utf-8')).hexdigest()[:16])
+
     # Setup reference benchmark
     logging.info("Setting up reference benchmark comparison...")
     if args.reference_file:
@@ -111,9 +117,9 @@ def main():
     )
 
     parser = argparse.ArgumentParser(description="Contamination Detector Module")
-    parser.add_argument("--input-file", type=str, default="../data/preprocessed_wikitext103_subset.csv",
+    parser.add_argument("--input-file", type=str, default="data/preprocessed_wikitext103_subset.csv",
                         help="Path to preprocessed CSV file with a 'segments' column.")
-    parser.add_argument("--output-file", type=str, default="../data/contamination_flags_sample.csv",
+    parser.add_argument("--output-file", type=str, default="data/contamination_flags_sample.csv",
                         help="Path to save the flagged contamination output CSV.")
     parser.add_argument("--reference-file", type=str, default=None,
                         help="Optional path to a reference benchmark text file (one text per line).")

@@ -22,6 +22,7 @@ import pandas as pd
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
+import hashlib
 
 # Set aesthetic style for plots
 sns.set(style="whitegrid", palette="viridis", font_scale=1.2)
@@ -37,6 +38,10 @@ def process_membership_inference(args):
 
     # Ensure 'segments' column is string type
     df['segments'] = df['segments'].astype(str)
+
+    # Add stable segment identifiers for downstream merging if absent
+    if 'segment_id' not in df.columns:
+        df['segment_id'] = df['segments'].map(lambda x: hashlib.sha256(x.encode('utf-8')).hexdigest()[:16])
 
     # Compute or load embeddings
     embeddings = compute_embeddings_for_segments(
